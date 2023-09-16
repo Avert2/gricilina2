@@ -9,17 +9,31 @@ nltk.download('punkt')
 nltk.download('maxent_ne_chunker')
 nltk.download('words')
 
-locations_list = ['indonesia', 'jakarta', 'surabaya', 'bandung', 'semarang', 'medan', 'palembang', 'makassar', 'denpasar', 'bogor']
+
+def load_locations_from_file(file_path):
+    locations = []
+    with open(file_path, 'r') as file:
+        for line in file:
+            location = line.strip()  # Remove leading/trailing whitespace
+            if location:
+                locations.append(location)
+    return locations
+
+# Specify the path to your locations text file
+locations_file_path = 'Kelurahan_jawabarat.txt'  # Update this with the actual path to your text file
+
+# Load locations from the file and add them to your locations_list
+locations_list = load_locations_from_file(locations_file_path)
+
 def extract_locations_from_title(title):
     locations = []
     # Convert title to lowercase for case-insensitive matching
     title = title.lower()
     for location in locations_list:
         # Use regular expressions to find locations in the title (case-insensitive)
-        if re.search(rf'\b{location}\b', title):
+        if re.search(rf'\b{location}\b', title, re.IGNORECASE):
             locations.append(location)
     return locations
-
 
 def summarize_realtime_news():
     news_client = news(lang='id', region='ID')
